@@ -22,13 +22,13 @@ class DataFixtures extends Fixture
     { // Déclaration d'une variable de type array, avec le nom des différentes catégories de NewsActu.
         $categories = [
             "Politique",
-            "Sport",
+            "Religion",
             "Sport",
             "Santé",
             "Économie",
             "Informatique",
             "Cinéma",
-            "Écologie",
+            "Environement",
             "Hi Tech"
         ];
         // boucle optimisé pour les array

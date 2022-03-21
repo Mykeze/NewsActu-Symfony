@@ -13,11 +13,14 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
-
-#[Route("/admin")]
+/**
+*@Route("/admin")
+*/
 class AdminController extends AbstractController
 {
-    #[Route("/tableau-de-bord", name: "show_dashboard", methods: ["GET"])]
+    /**
+    *@Route("/tableau-de-bord", name="show_dashboard", methods={"GET"})
+    */
     public function showDashboard(EntityManagerInterface $entityManager): Response
     {
         $articles = $entityManager->getRepository(Article::class)->findAll();//findBy(['deletedAt'=>null]);
@@ -26,7 +29,9 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route("/creer-un-article", name: "create-article", methods: ["GET|POST"])]
+    /**
+    *@Route("/creer-un-article", name="create-article", methods= {"GET|POST"})
+    */
     public function createArticle(Request $request,EntityManagerInterface $entityManager,
         SluggerInterface $slugger): Response 
     {
@@ -80,7 +85,9 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route("/modifier-un-article/{id}", name: 'update_article', methods: ["GET|POST"])] //l'action est executé 2 fois et accessible par les deux methods (GET|POST)
+    /**
+    *@Route("/modifier-un-article/{id}", name="update_article", methods={"GET|POST"}) //l'action est executé 2 fois et accessible par les deux methods (GET|POST)
+    */
     public function updateArticle(Article $article, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         //condition ternaire : $article->getPhoto() ?? '';
@@ -124,8 +131,9 @@ class AdminController extends AbstractController
             'article' => $article
         ]);
     }
-
-    #[Route("/archiver-un-article/{id}", name: "soft_delete_article", methods: ["GET"])]
+    /**
+    *@Route("/archiver-un-article/{id}", name= "soft_delete_article", methods= {"GET"})
+    */
     public function softDeleteArticle(Article $article, EntityManagerInterface $entityManager): Response
     {
         # On set la propriété deletedAt pour archiver l'article.
@@ -138,7 +146,9 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('show_dashboard');
     }
 
-    #[Route("/supprimer-un-article/{id}", name: "hard_delete_article", methods: ["GET"])]
+    /**
+    *@Route("/supprimer-un-article/{id}", name= "hard_delete_article", methods= {"GET"})
+    */
     public function hardDeleteArticle(Article $article, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($article);
@@ -147,8 +157,9 @@ class AdminController extends AbstractController
         $this->addFlash('success', "L'article ''" . $article->getTitle() . "'' a été définitvement supprimé");
         return $this->redirectToRoute('show_dashboard');
     }
-
-    #[Route("/restaurer-un-article/{id}", name: "restore_article", methods: ["GET"])]
+    /**
+    *@Route("/restaurer-un-article/{id}", name= "restore_article", methods= {"GET"})
+    */
     public function restoreArticle(Article $article, EntityManagerInterface $entityManager): Response
     {
         $article->setDeletedAt();

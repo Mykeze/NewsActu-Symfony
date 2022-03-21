@@ -2,54 +2,74 @@
 
 namespace App\Entity;
 
+use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ArticleRepository;
-use Symfony\Component\Validator\Constraint as Assert;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: ArticleRepository::class)]
+/**
+ * @ORM\Entity(repositoryClass=ArticleRepository::class)
+ */
 class Article
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $title;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $alias;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $subtitle;
 
-    #[Assert\NotBlank(message: "Ce champ ne peut être vide" )]
-    #[ORM\Column(type: 'text')]
+    /**
+     * @Assert\NotBlank(message="Ce champ ne peut être vide")
+     * @ORM\Column(type="text")
+     */
     private $content;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
     private $photo;
 
-    #[ORM\Column(type: 'datetime')]
+    /**
+     * @ORM\Column(type="datetime")
+     */
     private $createdAt;
 
-    #[ORM\Column(type: 'datetime')]
+    /**
+     * @ORM\Column(type="datetime")
+     */
     private $updatedAt;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $deletedAt;
 
-    #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="articles")
+     * @ORM\JoinColumn(nullable=false)
+     */
     private $category;
 
-    #[ORM\Column(type: 'text')]
-    private $comment;
-
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Commentary::class)]
+    /**
+     * @ORM\OneToMany(targetEntity=Commentary::class, mappedBy="article")
+     */
     private $commentaries;
 
     public function __construct()
@@ -166,18 +186,6 @@ class Article
     public function setCategory(?Categorie $category): self
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    public function getComment(): ?string
-    {
-        return $this->comment;
-    }
-
-    public function setComment(string $comment): self
-    {
-        $this->comment = $comment;
 
         return $this;
     }

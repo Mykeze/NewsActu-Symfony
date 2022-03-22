@@ -56,4 +56,60 @@
 			{% endfor %}
 		</tbody>
 	</thead>
-</table>{% endblock %}
+</table>
+
+<div class="row">
+	<div class="col-6">
+	<h3 class="text-center">Toutes les catégories</h3>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nom</th>
+				<th>Créé le</th>
+				<th>Mis à jour</th>
+				<th>Actions</th>
+	
+			</tr>
+		</thead>
+
+		<tbody>
+
+		{% for categorie in categories %}				
+			<tr>
+				<td>{{categorie.id}}</td>
+				<td>{{categorie.name}}</td>
+				<td>{{categorie.createdAt | date('d/m/Y') }}</td>
+				<td>{{categorie.updatedAt | date('d/m/Y') }}</td>
+				<td>
+					{% if categorie.deletedAt is null %}
+						<a href="#{# {{ path('update_categorie', {'id': categorie.id} ) }} #}" 						
+							class="btn btn-info">
+								<i class="fa fa-edit"></i>
+						</a>|
+						<a href="#{# {{ path('soft_delete_categorie', {'id': categorie.id} ) }} #}"
+							onclick="return confirm('Voulez vous vraiment archiver cette categorie');"
+							class="btn btn-danger">
+								<i class="fa fa-trash"></i>
+						</a>
+
+					{% else %}
+						<a href="#{# {{ path('restore_categorie', {'id': categorie.id} ) }} #}" 						
+							class="btn btn-outline-info">
+								<i class="fa fa-trash-restore"></i>
+						</a>|
+						<a href="{# {{ path('hard_delete_categorie', {'id': categorie.id} ) }} #}"
+							onclick="return confirm('Voulez vous vraiment supprimer définitivement cette categorie de la base de données');"
+							class="btn btn-outline-danger">
+								<i class="fas fa-times-circle"></i>
+						</a>
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	</div>
+</div>
+
+{% endblock %}

@@ -3,10 +3,12 @@
 {% block body %}
 
 	<h1 class="text-center my-3 mx-auto">Tous les articles</h1>
+
+	{% include "include/_flashes.html.twig" %}
 	
 	<div class="row mx-auto d-flex">
 		{% for article in articles %}
-			<div class="col-3 my-3 ms-2">
+			<div class="col-3 my-3 ms-2 mx-auto">
 				<div class="card" style="width: 18rem;">
 					<img src="{{ asset('uploads/') ~ article.photo}}" width="230" height="130" class="card-img-top img-card-custom" alt="{{ article.title }}">{# la fonction asset() regarde tjrs ds le dossier public #}
 					<div class="card-body">

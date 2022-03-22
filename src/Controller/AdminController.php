@@ -3,29 +3,65 @@
 namespace App\Controller;
 
 use DateTime;
+use App\Entity\User;
 use App\Entity\Article;
+use App\Entity\Categorie;
 use App\Form\ArticleFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+//@IsGranted("ROLE_ADMIN") limite le role a l'admin sur CE controller par sa route
+// 3 methode soit directement ds ce fichier a l'annotation soit ds securty.yaml soit par un try catch
 
 /**
-*@Route("/admin")
+* @Route("/admin")
+* //IsGranted("ROLE_ADMIN")
 */
 class AdminController extends AbstractController
 {
+    //@IsGranted("ROLE_ADMIN") limite le role a l'admin sur le dashboard controller par sa route
+    //danc pas besoin d"tre admin pour ajouter un article
+
     /**
-    *@Route("/tableau-de-bord", name="show_dashboard", methods={"GET"})
+    * @Route("/tableau-de-bord", name="show_dashboard", methods={"GET"})
+    * //IsGranted("ROLE_ADMIN")
     */
     public function showDashboard(EntityManagerInterface $entityManager): Response
     {
+        
+        ################################### limited access admin ####################################
+        /* ICI la 3e methode de restriction admin
+         * try/catch fait partie de PHP nativement.
+         * Cela a été créé pour gérer les class Exception (erreur).
+         * On se sert d'un try/catch lorsqu'on utilise des méthodes (fonctions) QUI LANCE (throw) une Exception.
+         * Si la méthode lance l'erreur pendant son exécution, alors l'Excepetion sera 'attrapée' (catch).
+         * Le code dans les accolades du catch sera alors exécuté.
+         */
+        try{
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        }
+        catch(AccessDeniedException $exception){
+            $this->addFlash('warning', 'Acces interdit');
+            return $this->redirectToRoute('default_home');
+        }
+        ################################################################################################
+
         $articles = $entityManager->getRepository(Article::class)->findAll();//findBy(['deletedAt'=>null]);
+        $categories = $entityManager->getRepository(Categorie::class)->findAll();
+        $users = $entityManager->getRepository(User::class)->findAll();
+     
+        
         return $this->render('admin/show_dashboard.html.twig', [
             'articles' => $articles,
+            'categories' => $categories,
+            'users' => $users,
         ]);
     }
 
@@ -44,6 +80,10 @@ class AdminController extends AbstractController
             $article->setAlias($slugger->Slug($article->getTitle()));
             $article->setCreatedAt(new DateTime());
             $article->setUpdatedAt(new DateTime());
+
+            //Association dun auteur a un article
+            $article->setAuthor($this->getUser());
+
             //variabilisation du fichier 'photo' uploadé.
             $file = $form->get('photo')->getData();
 

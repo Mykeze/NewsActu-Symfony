@@ -9,7 +9,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-10 my-4 mx-auto">
+		<div class="col-12 my-4 mx-auto">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-title text-center mb-5">{{ article.title }}</h1>
@@ -33,10 +33,21 @@
 
 		</div>
 	</div>
-	{{ render(controller('App\\Controller\\CommentaryController::addCommentary', {'id': article.id} )) }}
 
+	{% if app.user %}
+
+	{{ render(controller('App\\Controller\\CommentaryController::addCommentary', {'id': article.id} )) }}
 	{# {{ render(url('add_commentary', {'id' : article.id}) ) }} #}
-	
+	{% else %}
+
+        <div class="row">
+            <div class="col-8 mx-auto text-center">
+                <p class="h4"> Vous devez être connecté pour commenter cet article </p>
+                <a class="d-block col-3 btn btn-info mx-auto" href="{{ path('app_login') }}">Connexion</a>
+            </div>
+        </div>
+    {% endif %}
+
 	<hr>
 
 	<h3>Espace commentaires</h3>
@@ -48,7 +59,7 @@
 				{% for commentary in commentaries %}
 
 					<div class="bg light shadow my-2">
-						<p class="ps-3 text-muted">Créé le : {{ commentary.createdAt | date('d/m/Y') }} | Écrit par</p>
+						<p class="ps-3 text-muted">Créé le : {{ commentary.createdAt | date('d/m/Y') }} | Écrit par : {{ article.author.prenom | capitalize }} {{ article.author.nom | upper }} </p>
 						<p class="ps-3">{{ commentary.comment | raw}}</p>
 					</div>
 						

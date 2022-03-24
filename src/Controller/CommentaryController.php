@@ -55,4 +55,18 @@ class CommentaryController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("archiver-mon-commentaire", name="soft_delete_commentary", methods="{GET}")
+     */
+    public function softDeleteCommentary(Commentary $commentary, EntityManagerInterface $entityManager): Response
+    {
+        $commentary->setDeletedAt(new DateTime());
+        $entityManager->persist($commentary);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Votre commentaire est archivé");
+        return $this->redirectToRoute('show_article');
+
+    }
 }

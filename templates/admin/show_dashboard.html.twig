@@ -2,114 +2,132 @@
 
 {% block body %}
 
-	<h1 class="text-center">Tableau de bord</h1>
+    <h1 class="text-center">Tableau de Bord</h1>
 
-	{% include 'include/_flashes.html.twig' %}
-	<h3 class="text-center">Tous les articles</h3>
-	<table class="table">
-		<tr>
-			<thead>
-				<th>Id</th>
-				<th>Catégorie</th>
-				<th>Titre</th>
-				<th>Contenu</th>
-				<th>Créer le</th>
-				<th>Modifié le</th>
-				<th>Actions</th>
-			</thead>
-		</tr>
-		<tbody>
-			{% for article in articles | reverse %}
-				<tr>
-					<td>{{ article.id }}</td>
-					<td>{{ article.category.name }}</td>
-					<td>{{ article.title | length > 20 ? article.title | slice(0,20) ~ '...' : article.title }}</td>
-					<td>{{ article.content  | length > 60 ? article.content | slice(0,80) ~ '...' : article.content }}</td>
-					<td>{{ article.createdAt | date('d/m/Y') }}</td>
-					<td>{{ article.updatedAt | date('d/m/Y') }}</td>
-					<td>
+   {% include 'include/_flashes.html.twig' %}
 
-					{% if article.deletedAt is null %}
-						<a href="{{ path('update_article', {'id': article.id} ) }}" 						
-							class="btn btn-info">
-								<i class="fa fa-edit"></i>
-						</a>|
-						<a href="{{ path('soft_delete_article', {'id': article.id} ) }}"
-							onclick="return confirm('Voulez vous vraiment archiver cet article');"
-							class="btn btn-danger">
-								<i class="fa fa-trash"></i>
-						</a>
+    <h3 class="text-center">Tous les articles</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Catégorie</th>
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Créé le</th>
+                <th>Modifié le</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles | reverse %}
+                <tr>
+                    <td>{{ article.id }}</td>
+                    <td>{{ article.category.name }}</td>
 
-					{% else %}
-						<a href="{{ path('restore_article', {'id': article.id} ) }}" 						
-							class="btn btn-outline-info">
-								<i class="fa fa-trash-restore"></i>
-						</a>|
-						<a href="{{ path('hard_delete_article', {'id': article.id} ) }}"
-							onclick="return confirm('Voulez vous vraiment supprimer définitivement cet article de la base de données');"
-							class="btn btn-outline-danger">
-								<i class="fas fa-times-circle"></i>
-						</a>
-					{% endif %}
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</thead>
-</table>
+                    <td>{{ article.title|length > 20 ? article.title|slice(0,20) ~ '...' : article.title  }}</td>
 
-<div class="row">
-	<div class="col-6">
-	<h3 class="text-center">Toutes les catégories</h3>
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Nom</th>
-				<th>Créé le</th>
-				<th>Mis à jour</th>
-				<th>Actions</th>
-	
-			</tr>
-		</thead>
+                    <td>{{ article.content|length > 20 ? article.content|slice(0,20) ~ '...' : article.content }}</td>
+                    <td>{{ article.createdAt | date('d/m/Y') }}</td>
+                    <td>{{ article.updatedAt | date('d/m/Y') }}</td>
+                    <td>
 
-		<tbody>
+                        {% if article.deletedAt is null %}
 
-		{% for categorie in categories %}				
-			<tr>
-				<td>{{categorie.id}}</td>
-				<td>{{categorie.name}}</td>
-				<td>{{categorie.createdAt | date('d/m/Y') }}</td>
-				<td>{{categorie.updatedAt | date('d/m/Y') }}</td>
-				<td>
-					{% if categorie.deletedAt is null %}
-						<a href="#{# {{ path('update_categorie', {'id': categorie.id} ) }} #}" 						
-							class="btn btn-info">
-								<i class="fa fa-edit"></i>
-						</a>|
-						<a href="#{# {{ path('soft_delete_categorie', {'id': categorie.id} ) }} #}"
-							onclick="return confirm('Voulez vous vraiment archiver cette categorie');"
-							class="btn btn-danger">
-								<i class="fa fa-trash"></i>
-						</a>
+                            <a href="{{ path('update_article', {'id': article.id} ) }}"
+                               class="btn btn-info">
+                                <i class="fa fa-edit"></i>
+                            </a> |
+                            <a href="{{ path('soft_delete_article', {'id': article.id} ) }}"
+                               onclick="return confirm('Voulez-vous archiver cet article ?')"
+                               class="btn btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </a>
 
-					{% else %}
-						<a href="#{# {{ path('restore_categorie', {'id': categorie.id} ) }} #}" 						
-							class="btn btn-outline-info">
-								<i class="fa fa-trash-restore"></i>
-						</a>|
-						<a href="{# {{ path('hard_delete_categorie', {'id': categorie.id} ) }} #}"
-							onclick="return confirm('Voulez vous vraiment supprimer définitivement cette categorie de la base de données');"
-							class="btn btn-outline-danger">
-								<i class="fas fa-times-circle"></i>
-						</a>
-					{% endif %}
-				</td>
-			</tr>
-		{% endfor %}
-		</tbody>
-	</table>
-	</div>
-</div>
+                        {% else %}
+
+                            <a href="{{ path('restore_article', {'id': article.id} ) }}"
+                               class="btn btn-outline-info">
+                                <i class="fa fa-trash-restore"></i>
+                            </a> |
+                            <a href="{{ path('hard_delete_article', {'id': article.id} ) }}"
+                               onclick="return confirm('Voulez-vous vraiment supprimer définitivement cet article de la base de données ?')"
+                               class="btn btn-outline-danger">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+
+                        {% endif %}
+
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="row my-3">
+
+        <div class="col-6">
+            <h3 class="text-center">Toutes les catégories</h3>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Créée le</th>
+                        <th>Modifiée le</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.id }}</td>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.createdAt | date('d/m/Y') }}</td>
+                            <td>{{ category.updatedAt | date('d/m/Y') }}</td>
+                            <td>
+
+                                {% if category.deletedAt is null %}
+
+                                    <a href="{{ path('update_category', {'id': category.id}) }}"
+                                       class="btn btn-info">
+                                        <i class="fa fa-edit"></i>
+                                    </a> |
+                                    <a href="{{ path('soft_delete_category', {'id': category.id}) }}"
+                                       onclick="return confirm('Voulez-vous archiver cette catégorie ?')"
+                                       class="btn btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+
+                                {% else %}
+
+                                    <a href="{{ path('restore_category', {'id': category.id}) }}"
+                                       class="btn btn-outline-info">
+                                        <i class="fa fa-trash-restore"></i>
+                                    </a> |
+                                    <a href="{{ path('hard_delete_category', {'id': category.id}) }}"
+                                       onclick="return confirm('Voulez-vous vraiment supprimer définitivement cette catégorie de la base de données ?')"
+                                       class="btn btn-outline-danger">
+                                        <i class="fas fa-times-circle"></i>
+                                    </a>
+
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-6">
+            <h3 class="text-center">Tous les utilisateurs</h3>
+
+        </div>
+
+    </div>
 
 {% endblock %}

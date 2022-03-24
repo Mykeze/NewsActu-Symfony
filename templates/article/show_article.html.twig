@@ -29,7 +29,6 @@
 					{#raw interpretation de html donc desactivation de sécurité#}
 				</div>
 			</div>
-
 		</div>
 	</div>
 
@@ -61,9 +60,27 @@
 							<p class="ps-3 text-muted">Créé le : {{ commentary.createdAt | date('d/m/Y') }} | Écrit par : {{ commentary.author ? commentary.author.prenom | capitalize ~ ' ' ~ commentary.author.nom | upper : "Pas d'auteur" }}
 							{% if commentary.author is same as app.user %}
 
-							<span style="float: right" class="pe-2" onclick="return confirm('Voulez vous archiver ce commentaire ? \n Vous retrouverez ces commentaires dans la partie mes commentaires de votre profil')">
-								<a href="" class="text-danger"><i class="fa fa-times-circle"></i></a>
+							<span style="float: right" class="pe-2" onclick="return confirm('Voulez vous archiver ce commentaire ? \n Vous retrouverez ces commentaires dans la partie mes commentaires de votre profil')">					
+
+							{#  ############ 1e Façon ############ 
+									=> suite du commentaire de CommentaryController::softDeleteCommentary()
+									Ici nous avons construit grace au symbole '?' notre url, dans le href apres le {{ path ()}}, notre URL avec les arguments necessaires pour la redirection (voir commentaire controller)
+									#}
+							{# <a href="{{ path('soft_delete_commentary', {'id': commentary.id}) }}?cat_alias={{ article.category.alias }}&article_alias={{ article.alias }}&article_id={{ article.id }}" class="text-danger"><i class="fa fa-times-circle"></i></a>#}
+                            {#  ################################ #}
+
+							{#  ############ 2e Façon ############
+								=> suite du commentaire de CommentaryController::softDeleteCommentary()
+								Ici on retire tous parametre ds l'URL except" le param OBLIGATOIRE de la route {id}
+							#}	
+								<a href="{{ path('soft_delete_commentary', {'id': commentary.id}) }}" class="text-danger"><i class="fa fa-times-circle"></i></a>
+							{#  ################################## #}
+
 							</span>
+
+
+
+
 							{% endif %}
 							</p>
 

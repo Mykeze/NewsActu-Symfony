@@ -6,13 +6,25 @@
 
 <div class="row mt-3">
 {% include "include/_flashes.html.twig" %}
+
+{# 1ere facon Affichage stat directement ds le twig #}
+ {# <p>Vous avez posté {{commentaries|length}} commentaires</p> #}
+
+{# 2eme facon Affichage stat par le CommentaryController #}
+<div class="col-12 bg-info p-4 rounded">
+    <span>Total des commentaires créés : {{ total }}</span>
+    <span class="ps-3">Total commentaires en ligne : {{ totalOnline }}</span>
+    <span class="ps-3">Total commentaires archivés : {{ totalArchived }}</span>
+</div>
+
+
+
 </div>
 
     <div class="row">
         <div class="col-6 mt-4">
 
             <h3 class="h4">Commentaires en ligne</h3>
-
 
             <table class="table">
                 <thead>
@@ -25,10 +37,14 @@
                 </thead>
                 <tbody>
 
+                {% set countdOnline = 0 %}
+                {% set countDelete =0 %}
+
                 {% if commentaries is not empty %}
                     {% for commentary in commentaries %}
-                        {% if commentary.deletedAt is null %}
-
+                       {% if commentary.deletedAt is null %}
+                        {# {% set countdOnline = countdOnline + 1 %} #}
+                        
                             <tr>
                                 <td>{{ commentary.comment | slice(0,15) }}</td>
                                 <td>{{ commentary.article.title | slice(0, 10) }}</td>
@@ -41,7 +57,7 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-
+               {#  <p>Vous avez {{countdOnline}} commentaires en ligne</p> #}
                 </tbody>
             </table>
         </div> {# END .col-6 #}
@@ -55,7 +71,7 @@
                 <tr>
                     <th>Contenu</th>
                     <th>Posté sur</th>
-                    <th>Crée le</th>
+                    <th>Archivé le</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -64,28 +80,26 @@
                 {% if commentaries is not empty %}
                     {% for commentary in commentaries %}
                         {% if commentary.deletedAt is not null %}
+                        {# {% set countDelete = countDelete + 1 %} #}
 
                             <tr>
                                 <td>{{ commentary.comment | slice(0,15) }}</td>
                                 <td>{{ commentary.article.title | slice(0, 10) }}</td>
-                                <td>{{ commentary.createdAt | date('d/m/Y') }}</td>
+                                <td>{{ commentary.deletedAt | date('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ path('soft_delete_commentary', {'id': commentary.id}) }}" class="btn btn-info" title="Modifier mon profil"><i class="fa fa-trash-restore"></i></a>
+                                    <a href="{{ path('restore_commentary', {'id': commentary.id}) }}" class="btn btn-info" title="Modifier mon profil"><i class="fa fa-trash-restore"></i></a>
                                 </td>
                             </tr>
-
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-
+               {#  <p>Vous avez {{countDelete}} commentaires archivés</p> #}
                 </tbody>
             </table>
 
         </div>
 
     </div> {# END .row #}
-
-
-
+    
 {% endblock %}
 

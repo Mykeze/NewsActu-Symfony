@@ -121,4 +121,25 @@ class CommentaryController extends AbstractController
         // #######################################################
 
     }
+
+###############################################################################################################################################
+################################################## RESTORE COMMENTARY #########################################################################
+###############################################################################################################################################
+
+    /**
+     * @Route("/restaurer-un-commentaire_{id}", name="restore_commentary", methods={"GET"})
+     */
+    public function restoreCommentary(Article $article, Commentary $commentary, EntityManagerInterface $entityManager): Response
+    {
+        $dateCreate = $commentary->getCreatedAt();
+
+        // dd($dateCreate);
+        $commentary->setDeletedAt(null);
+
+        $entityManager->persist($commentary);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Le commentaire du DATE A METTRE de l'article ''". $article->getTitle() ."'' a bien été restaurée");
+        return $this->redirectToRoute('show_user_commentary');
+    }
 }
